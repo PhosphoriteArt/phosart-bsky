@@ -1,4 +1,4 @@
-import type { Post } from "./posts.ts";
+import type { Post } from './posts.ts';
 
 export interface ICache {
 	getCachedPosts(limit?: number): Promise<Post[]>;

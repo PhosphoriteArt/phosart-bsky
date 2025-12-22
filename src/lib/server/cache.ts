@@ -2,8 +2,6 @@ import { Db, MongoClient } from 'mongodb';
 import type { Post } from '../util/posts.ts';
 import type { ICache } from '../util/cache.ts';
 
-
-
 export interface MongoDbCacheConfig {
 	type: 'mongodb';
 	uri: string;
@@ -21,7 +19,7 @@ function setupCollections(db: Db) {
 	};
 }
 
-type Collections = ReturnType<typeof setupCollections>
+type Collections = ReturnType<typeof setupCollections>;
 
 export class MongoCache implements ICache {
 	#collections: Collections;
@@ -32,7 +30,6 @@ export class MongoCache implements ICache {
 		const db = client.db(config.dbname ?? 'phosart-bsky-cache');
 
 		this.#collections = setupCollections(db);
-
 	}
 
 	async cachePosts(posts: Post[]): Promise<void> {
@@ -58,7 +55,9 @@ export class MongoCache implements ICache {
 	}
 
 	async postsLastCachedAt(): Promise<Date> {
-		return (await this.#collections._info.findOne({ _id: '_info' }))?.last_checked_at ?? new Date(0);
+		return (
+			(await this.#collections._info.findOne({ _id: '_info' }))?.last_checked_at ?? new Date(0)
+		);
 	}
 }
 

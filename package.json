@@ -5,7 +5,7 @@
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
+		"prepare": "husky",
 		"prepack": "svelte-kit sync && svelte-package && publint",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -92,6 +92,8 @@
 	],
 	"dependencies": {
 		"@atproto/api": "^0.18.8",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7",
 		"mongodb": "^7.0.0"
 	}
 }
