@@ -48,7 +48,7 @@ export class PostsClient {
 
 		const out: Post[] = [];
 
-		const mostRecent = (await this.#backend?.getCachedPosts(1))?.[0] ?? null;
+		const mostRecent = cached[0] ?? null;
 
 		let cursor: string | undefined = undefined;
 		do {
@@ -57,7 +57,7 @@ export class PostsClient {
 			).getAuthorFeed({
 				actor: this.#did,
 				filter: 'posts_no_replies',
-				limit: limit ?? 50,
+				limit: 50,
 				cursor: cursor
 			});
 			cursor = resp.data.cursor ?? undefined;
