@@ -81,7 +81,10 @@ export class PostsClient {
 			.filter(
 				(fvp) =>
 					fvp.post.author.did === this.#did &&
-					fvp.reason?.$type !== 'app.bsky.feed.defs#reasonRepost'
+					fvp.reason?.$type !== 'app.bsky.feed.defs#reasonRepost' &&
+					!fvp.reply &&
+					(fvp.post.embed?.$type?.startsWith('app.bsky.embed.images#view') ||
+						fvp.post.embed?.$type.startsWith('app.bsky.embed.video#view'))
 			)
 			.map(
 				(fvp) =>
@@ -91,17 +94,22 @@ export class PostsClient {
 						text: (fvp.post.record as AppBskyFeedPost.Record).text,
 						likes: fvp.post.likeCount || 0,
 						reposts: fvp.post.repostCount || 0,
-						image_fullsize_url:
-							(fvp.post.embed as AppBskyEmbedImages.View)?.images?.map((img) => img.fullsize) ??
-							null,
-						image_thumb_url:
-							(fvp.post.embed as AppBskyEmbedImages.View)?.images?.map((img) => img.thumb) ?? null,
-						image_alt:
-							(fvp.post.embed as AppBskyEmbedImages.View)?.images?.map((img) => img.alt) ?? null,
+						image_details:
+							(fvp.post.embed as AppBskyEmbedImages.View)?.images?.map((img) => ({
+								full_url: img.fullsize,
+								alt_text: img.alt,
+								thumb_url: img.thumb
+							})) ?? [],
 						video_thumb_url: (fvp.post.embed as AppBskyEmbedVideo.View)?.thumbnail ?? null
 					}) satisfies Post
 			);
 	}
+}
+
+export interface ImageDetails {
+	alt_text: string;
+	thumb_url: string;
+	full_url: string;
 }
 
 export interface Post {
@@ -110,8 +118,6 @@ export interface Post {
 	text: string;
 	likes: number;
 	reposts: number;
-	image_fullsize_url: string[] | null;
-	image_thumb_url: string[] | null;
-	image_alt: string[] | null;
+	image_details: ImageDetails[];
 	video_thumb_url: string | null;
 }
