@@ -16,25 +16,31 @@ const DEFAULT_AGE_MS = 1000 * 60 * 10; // 10 minutes
 const DEFAULT_MAX_POSTS_FROM_BSKY = 50;
 
 export class PostsClient {
-	#agent: Promise<AtpAgent>;
+	#agent: AtpAgent;
 	#backend: ICache | null;
 	#maxAgeMs: number;
 	#did: string;
+	#didLogIn: boolean = false;
+	#config: PostsConfiguration;
 
 	constructor(config: PostsConfiguration) {
-		this.#agent = (async () => {
-			const agent = new AtpAgent({
-				service: 'https://bsky.social'
-			});
-			await agent.login({ identifier: config.bskyUsername, password: config.bskyPassword });
-			return agent;
-		})();
+		this.#agent = new AtpAgent({
+			service: 'https://bsky.social'
+		});
+		this.#config = config;
+
 		this.#backend = config.cache?.backend ?? null;
 		this.#maxAgeMs = config.cache?.maxAgeMs ?? DEFAULT_AGE_MS;
 		this.#did = config.bskyDid;
 	}
 
 	async getPosts(limit: number = DEFAULT_MAX_POSTS_FROM_BSKY) {
+		if (!this.#didLogIn) {
+			await this.#agent.login({
+				identifier: this.#config.bskyUsername,
+				password: this.#config.bskyPassword
+			});
+		}
 		let cached: Post[] = [];
 		if (this.#backend) {
 			cached = await this.#backend.getCachedPosts(limit);
@@ -52,9 +58,7 @@ export class PostsClient {
 
 		let cursor: string | undefined = undefined;
 		do {
-			const resp = await (
-				await this.#agent
-			).getAuthorFeed({
+			const resp = await this.#agent.getAuthorFeed({
 				actor: this.#did,
 				filter: 'posts_no_replies',
 				limit: 50,
