@@ -1,5 +1,5 @@
 {
-	"name": "phosart-bsky",
+	"name": "@phosart/bsky",
 	"version": "0.2.1",
 	"scripts": {
 		"dev": "vite dev",
