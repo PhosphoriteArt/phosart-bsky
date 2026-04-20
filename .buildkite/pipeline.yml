@@ -1,0 +1,12 @@
+steps:
+  - name: ":node: build"
+    command: pnpm run build
+    plugins:
+      - docker-compose#v5.4.0:
+          run: base
+
+  - name: ":node: test"
+    command: pnpm run test
+    plugins:
+      - docker-compose#v5.4.0:
+          run: test
