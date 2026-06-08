@@ -8,6 +8,7 @@ RUN npm install -g pnpm
 FROM base AS builder
 
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml /app/
+RUN corepack enable
 RUN pnpm install --frozen
 
 FROM builder AS sourced
