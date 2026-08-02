@@ -6,7 +6,7 @@ steps:
     - pnpm ci
     - pnpm run build
 
-  - name: ":node: build"
+  - name: ":node: test"
     command:
     - corepack enable
     - corepack install
