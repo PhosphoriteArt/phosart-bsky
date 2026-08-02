@@ -1,12 +1,14 @@
 steps:
   - name: ":node: build"
-    command: pnpm run build
-    plugins:
-      - docker-compose#v5.4.0:
-          run: base
+    command:
+    - corepack enable
+    - corepack install
+    - pnpm ci
+    - pnpm run build
 
-  - name: ":node: test"
-    command: pnpm run test
-    plugins:
-      - docker-compose#v5.4.0:
-          run: test
+  - name: ":node: build"
+    command:
+    - corepack enable
+    - corepack install
+    - pnpm ci
+    - pnpm run test
