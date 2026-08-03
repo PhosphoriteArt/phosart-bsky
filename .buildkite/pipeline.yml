@@ -1,24 +1,12 @@
 steps:
   - name: ':node: build'
     command:
-      - nvm use
-      - corepack enable
-      - corepack install
-      - pnpm ci
       - pnpm run build
 
   - name: ':node: test'
     command:
-      - nvm use
-      - corepack enable
-      - corepack install
-      - pnpm ci
       - pnpm run test
 
   - name: ':node: lint'
     command:
-      - nvm use
-      - corepack enable
-      - corepack install
-      - pnpm ci
       - pnpm run lint
